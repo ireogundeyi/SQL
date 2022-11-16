@@ -220,3 +220,44 @@ select * from worker where worker_id = (select max(worker_id) from worker)
 select * from worker where worker_id = (select min(worker_id) from worker)
 
 --Q-44. Write an SQL query to fetch the last five records from a table.
+select * from worker 
+where worker_id > (select count(worker_id) - 5 from worker)
+
+--Q-45. Write an SQL query to print the name of employees having the highest salary in each department.
+SELECT t.DEPARTMENT,t.FIRST_NAME,t.Salary from (
+SELECT max(Salary) as TotalSalary,DEPARTMENT from Worker group by DEPARTMENT
+) as TempNew 
+Inner Join Worker t on TempNew.DEPARTMENT=t.DEPARTMENT 
+ and TempNew.TotalSalary=t.Salary;
+
+ --Q-46. Write an SQL query to fetch three max salaries from a table.
+select distinct top 3 salary from worker
+order by salary desc
+
+SELECT distinct Salary from worker a 
+WHERE 3 >= (
+SELECT count(distinct Salary) from worker b 
+WHERE a.Salary <= b.Salary
+) order by a.Salary desc;
+
+--Q-47. Write an SQL query to fetch three min salaries from a table.
+
+SELECT distinct Salary from worker a WHERE 3 >= (SELECT count(distinct Salary) from worker b WHERE a.Salary >= b.Salary) order by a.Salary desc;
+
+select distinct top 3  salary from worker 
+order by salary 
+
+--Q-48. Write an SQL query to fetch nth max salaries from a table.
+select distinct salary from worker a 
+where 3 >= (
+select count (distinct salarY) from worker b
+where a.salary <= b.salary) 
+order by salary desc;
+
+--Q-49. Write an SQL query to fetch departments along with the total salaries paid for each of them.
+select sum(salary) as totalSalary, department from worker
+group by department
+
+--Q-50. Write an SQL query to fetch the names of workers who earn the highest salary.
+select salary, concat(first_name,' ', last_name) as Name from worker
+where salary = (select max(salary) from worker)
